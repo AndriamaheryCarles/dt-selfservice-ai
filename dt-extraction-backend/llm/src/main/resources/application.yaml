@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: llm
+  config:
+    import:
+      - optional:file:dt-extraction-backend/llm/local/.env.local[.properties]
+#  cloud:
+#    config:
+#      import-check:
+#        enabled: false
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    url: ${CONFIG_EXTRACTION_DB_URL}
+#    username: ${CONFIG_EXTRACTION_DB_USERNAME}
+#    password: ${CONFIG_EXTRACTION_DB_PASSWORD}
+#    hikari:
+#      connection-test-query: SELECT 1
+#      minimum-idle: ${DB_MINIMUM_IDLE_DURATION}
+#      maximum-pool-size: ${DB_MAXIMUM_POOL_SIZE}
+#    pgbouncer:
+#      enabled: true
+#      url: ${PG_BOUNCER_URL}
+#      username: ${CONFIG_EXTRACTION_DB_USERNAME}
+#      password: ${CONFIG_EXTRACTION_DB_PASSWORD}
+#  jpa:
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+#        format_sql: true
+#    show-sql: false
+#    hibernate:
+#      ddl-auto: update
+  ai:
+    ollama.base-url: ${OLLAMA_AI_URL:http://localhost:11434}
+    ollama.chat.options.model: ${OLLAMA_AI_MODEL:gemma2:2b}
+    ollama.chat.options.temperature: 0.7
+
+server:
+  port: ${CONFIG_SERVER_PORT}
+  forward-headers-strategy: NATIVE
+spring-doc:
+  swagger-ui:
+    path: ${SWAGGER_UI_PATH}

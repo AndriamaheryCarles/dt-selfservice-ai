@@ -1,0 +1,17 @@
+---
+services:
+  dt-extraction-backend-llm:
+    build: ../
+    image: dt-extraction-backend-llm:lastest
+    platform: linux/amd64
+    container_name: dt-extraction-backend-llm
+    env_file: ${LLM_ENV_FILE:-llm/docker.local.env}
+    volumes:
+      - ./llm/logs:/app/logs
+    ports:
+      - "3197:3197"
+    restart: on-failure
+
+networks:
+  default:
+    name: data_network

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>mg.telma.data</groupId>
+        <artifactId>dt-selfservice-ai</artifactId>
+        <version>1.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>dt-extraction-backend</artifactId>
+    <packaging>pom</packaging>
+
+
+    <name>dt-extraction-backend</name>
+    <url>https://gitdwh.telma.net/datadigital/dp-data-distribution/dt-selfservice-ai/dt-extraction-backend</url>
+
+    <modules>
+        <module>llm</module>
+    </modules>
+
+
+    <repositories>
+        <repository>
+            <id>netflix-candidates</id>
+            <name>Netflix Candidates</name>
+            <url>https://artifactory-oss.prod.netflix.net/artifactory/maven-oss-candidates</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- Test Dependencies -->
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+        <dependency>
+            <artifactId>junit-jupiter</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>${maven-compiler-plugin.version}</version>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <version>2.1.0</version>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <binFileExtensions>
+                                <unix>.sh</unix>
+                            </binFileExtensions>
+                            <configurationDirectory>resources</configurationDirectory>
+                            <configurationSourceDirectory>src/main/resources</configurationSourceDirectory>
+                            <copyConfigurationDirectory>true</copyConfigurationDirectory>
+                            <filterConfigurationDirectory>true</filterConfigurationDirectory>
+                            <programs>
+                                <program>
+                                    <id>${project.name}</id>
+                                    <mainClass>${main.class}</mainClass>
+                                    <platforms>
+                                        <platform>unix</platform>
+                                    </platforms>
+                                </program>
+                            </programs>
+                            <repositoryLayout>flat</repositoryLayout>
+                            <repositoryName>libs</repositoryName>
+                        </configuration>
+                        <goals>
+                            <goal>assemble</goal>
+                        </goals>
+                        <id>assemble-standalone</id>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*UT.java</include>
+                        <include>**/*IT.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

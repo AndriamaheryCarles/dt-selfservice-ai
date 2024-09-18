@@ -1,0 +1,6 @@
+/**/*.iml
+/**/target/
+/**/data/
+/**/logs/
+/**/.env.local
+/**/.idea/

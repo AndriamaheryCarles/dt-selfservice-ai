@@ -1,1 +1,1 @@
-# dt-selfservice-ai
+# data-selfservice-ai
