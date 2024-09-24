@@ -1,4 +1,4 @@
-#!/bin/bash
+ #!/bin/bash
 
 echo "start the project with local env ..."
 export LLM_ENV_FILE="llm/docker.local.env"
