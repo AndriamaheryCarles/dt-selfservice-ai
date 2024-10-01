@@ -1,46 +1,49 @@
 package mg.telma.data.llm;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import mg.telma.data.llm.utils.PromptUtils;
-import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.model.Generation;
-import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.chat.prompt.PromptTemplate;
-import org.springframework.ai.ollama.OllamaChatModel;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/llm")
-@Tag(name = "LLM Extraction")
 public class OllamaController {
 
     @Autowired
-    private OllamaChatModel ollamaChatModel;
+    private LoggingService loggingService;
 
     @Autowired
-    private SqlQueryRepository sqlQueryRepository;
+    private SqlGenerationService sqlGenerationService;
+
+    @Autowired
+    private SqlQueryService sqlQueryService;
+
+    @Autowired
+    private ResponseService responseService;
+
+    @Autowired
+    private QuestionValidationService questionValidationService;
 
     @PostMapping("/user/text-to-sql")
-    public ResponseEntity<List<Generation>> getSqlFromText(@RequestBody String question) {
-        log.info("user sent : [question={}]", question);
-        Prompt prompt = new PromptTemplate(PromptUtils.getDatabasePromptWithQuestion(question)).create();
-        ChatResponse chatResponse = ollamaChatModel.call(prompt);
-        log.info("ollama replied : [response={}]", chatResponse.getResult().getOutput().getContent());
+    public ResponseEntity<List<String>> getSqlFromText(@RequestBody String question) {
+        loggingService.logRequest(question);
 
-        String sqlQuery = chatResponse.getResult().getOutput().getContent();
-        log.info("ollama replied : [response={}]", sqlQuery);
-        SqlQuery queryEntity = new SqlQuery(null, question, sqlQuery, LocalDateTime.now().toString());
-        sqlQueryRepository.save(queryEntity);
-        return ResponseEntity.ok().body(chatResponse.getResults());
+        if (!questionValidationService.isValidQuestion(question)) {
+            return ResponseEntity.badRequest().body(List.of("Invalid or meaningless question. Please ask a coherent question."));
+        }
+
+        String sqlQuery = sqlGenerationService.generateSqlQueryFromText(question);
+
+        loggingService.logResponse(sqlQuery);
+
+        sqlQueryService.saveSqlQuery(question, sqlQuery);
+
+        return responseService.createResponse(sqlQuery);
     }
 }
