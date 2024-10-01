@@ -1,6 +1,6 @@
 package mg.telma.data.llm.utils;
 
-import mg.telma.data.llm.LlmApplication;
+import mg.telma.data.llm.LlmExtractionApplication;
 import mg.telma.data.llm.configuration.OllamaException;
 
 import java.io.InputStream;
@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class PromptUtils {
     private PromptUtils() {}
     public static String getDatabasePromptWithQuestion(String question) throws OllamaException {
-        ClassLoader classLoader = LlmApplication.class.getClassLoader();
+        ClassLoader classLoader = LlmExtractionApplication.class.getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream("db-prompt-template.txt");
         if (inputStream != null) {
             Scanner scanner = new Scanner(inputStream);

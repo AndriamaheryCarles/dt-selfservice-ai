@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "sql_queries")
+@Table(name = "llm_selfservice_extraction")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,5 +21,5 @@ public class SqlQuery {
 
     private String question;
     private String sqlQuery;
-    private String timestamp;
+    private String createdAd;
 }

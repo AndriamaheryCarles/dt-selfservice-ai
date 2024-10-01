@@ -9,7 +9,7 @@ services:
     volumes:
       - ./llm/logs:/app/logs
     ports:
-      - "3197:3197"
+      - "3198:3198"
     restart: on-failure
 
 networks:
